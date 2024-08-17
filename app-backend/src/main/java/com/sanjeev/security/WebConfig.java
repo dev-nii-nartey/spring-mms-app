@@ -20,35 +20,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class WebConfig implements WebMvcConfigurer {
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//
-//        httpSecurity.headers().frameOptions().disable();
-//
-//        httpSecurity.cors().and().csrf().disable();
-//        //@formatter:off
-//        httpSecurity
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/auth/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(
-//                        (request, response, authException)
-//                                -> response.sendError(
-//                                HttpServletResponse.SC_UNAUTHORIZED,
-//                                authException.getLocalizedMessage()
-//                        )
-//                )
-//                .and()
-//                .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        //@formatter:on
-//        return httpSecurity.build();
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

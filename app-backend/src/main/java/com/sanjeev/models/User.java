@@ -41,10 +41,10 @@ public class User {
             joinColumns=@JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id",
                     referencedColumnName = "id"))
-    private Set<Role> role = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role){
-        this.role.add(role);
+        this.roles.add(role);
     }
 
 }
