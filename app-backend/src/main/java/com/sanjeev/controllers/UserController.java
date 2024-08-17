@@ -22,14 +22,14 @@ public class UserController {
         this.appUserService = appUserService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<Object> signup( @Valid @RequestBody DtoUser body){
-
-//        appUserService.create(body);
-        return AppUtils.createResponse(body
-                , HttpStatus.CREATED);
-
-    };
+//    @PostMapping("/signup")
+//    public ResponseEntity<Object> signup( @Valid @RequestBody DtoUser body){
+//
+////        appUserService.create(body);
+//        return AppUtils.createResponse(body
+//                , HttpStatus.CREATED);
+//
+//    };
 
 //    @PostMapping("/signup")
 //    public ResponseEntity<String> signup( @Valid @RequestBody DtoUser body){

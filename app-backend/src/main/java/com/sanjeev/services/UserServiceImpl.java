@@ -103,9 +103,8 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        User user = userRepository.findByEmail( email)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail( username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
@@ -113,7 +112,7 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
                 .collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(
-                email,
+                username,
                 user.getPassword(),
                 authorities
         );

@@ -21,7 +21,8 @@ const Auth = () => {
     const submitRegisterForm = async (e:any) => {
         try{
             e.preventDefault()
-            const response  = await  axios.post(`${apiBaseUrl}/signup`, {
+            console.log("here")
+            const response  = await  axios.post(`${apiBaseUrl}/auth/signup`, {
                 email, password, firstName, lastName
             })
             console.log(response);
@@ -35,7 +36,7 @@ const Auth = () => {
     const submitLoginForm = async (e:any) => {
         try{
             e.preventDefault()
-            const response  =  await axios.post(`${apiBaseUrl}/signup`, {
+            const response  =  await axios.post(`${apiBaseUrl}/auth/signin`, {
                 email, password, firstName, lastName
             })
             console.log(response);
@@ -97,7 +98,7 @@ const Auth = () => {
         <div className="Auth-form-container">
             <form className="Auth-form" onSubmit={submitRegisterForm}>
                 <div className="Auth-form-content">
-                    <h3 className="Auth-form-title">Sign In</h3>
+                    <h3 className="Auth-form-title">Sign Up</h3>
                     <div className="text-center">
                         Already registered?{" "}
                         <span className="link-primary" onClick={changeAuthMode}>
@@ -107,7 +108,7 @@ const Auth = () => {
                     <div className="form-group mt-3">
                         <label>First Name</label>
                         <input
-                            type="email"
+                            type="text"
                             className="form-control mt-1"
                             placeholder="e.g Jane Doe"
                             value={firstName}
@@ -117,7 +118,7 @@ const Auth = () => {
                     <div className="form-group mt-3">
                         <label>Last Name</label>
                         <input
-                            type="email"
+                            type="text"
                             className="form-control mt-1"
                             placeholder="e.g Doe"
                             value={lastName}

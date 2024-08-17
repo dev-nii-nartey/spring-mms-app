@@ -17,7 +17,7 @@ public class AppUtils {
         savedUser.setEmail(user.getEmail());
         savedUser.setFirstName(user.getFirst_name());
         savedUser.setLastName(user.getLast_name());
-        savedUser.setRoles(user.getRole());
+        savedUser.setRoles(user.getRoles());
         return savedUser;
     }
 }
