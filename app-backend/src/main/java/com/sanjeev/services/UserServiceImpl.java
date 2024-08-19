@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-@NoArgsConstructor
 public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     RoleRepository roleRepository;
@@ -61,8 +60,8 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
             User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-            existingUser.setFirst_name(userObject.getFirstName());
-            existingUser.setLast_name(userObject.getLastName());
+            existingUser.setFirstName(userObject.getFirstName());
+            existingUser.setLastName(userObject.getLastName());
             existingUser.setPassword(userObject.getPassword());
 
             User updatedUser = userRepository.save(existingUser);

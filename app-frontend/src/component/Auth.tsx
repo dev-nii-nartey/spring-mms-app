@@ -21,14 +21,13 @@ const Auth = () => {
     const submitRegisterForm = async (e:any) => {
         try{
             e.preventDefault()
-            console.log("here")
             const response  = await  axios.post(`${apiBaseUrl}/auth/signup`, {
                 email, password, firstName, lastName
             })
-            console.log(response);
+        console.log(response)
 
         }catch (error){
-            console.log(error)
+            alert(error)
         }
 
     }
@@ -36,15 +35,15 @@ const Auth = () => {
     const submitLoginForm = async (e:any) => {
         try{
             e.preventDefault()
-            const response  =  await axios.post(`${apiBaseUrl}/auth/signin`, {
-                email, password, firstName, lastName
+            const response  =  await axios.post(`${apiBaseUrl}/auth/login`, {
+                email, password
             })
-            console.log(response);
+        console.log(response);
             alert("Submitted")
 
 
         }catch (error){
-            console.log(error)
+            alert(error)
         }
     }
 

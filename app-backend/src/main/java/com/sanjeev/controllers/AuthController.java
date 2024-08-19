@@ -22,14 +22,11 @@ public class AuthController {
 
     private AuthService authService;
 
-
-
 //Build Register REST API
     @PostMapping("/signup")
     public ResponseEntity<Object> signup( @Valid @RequestBody DtoUser body){
-
-//        appUserService.create(body);
-        return AppUtils.createResponse(body
+        DtoUser newUser = authService.register(body);
+        return AppUtils.createResponse(newUser
                 , HttpStatus.CREATED);
 
     };
@@ -38,10 +35,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
         String token = authService.login(loginDto);
-
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setAccessToken(token);
-
         return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
 }

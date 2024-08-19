@@ -17,8 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllActiveUsers();
 
     @Query("SELECT u FROM User u WHERE " +
-            "(LOWER(u.first_name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(u.last_name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "(LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
             "u.isDeleted = false")
     List<User> searchByQuery(@Param("query") String query);

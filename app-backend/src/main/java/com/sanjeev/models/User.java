@@ -19,7 +19,7 @@ public class User {
     @Setter(lombok.AccessLevel.NONE)
     private Long id;
 
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     private boolean isDeleted = false;
 
@@ -31,10 +31,10 @@ public class User {
     private String email;
 
     @NonNull
-    private String first_name;
+    private String firstName;
 
     @NonNull
-    private String last_name;
+    private String lastName;
 
     @ManyToMany
     @JoinTable(name="user_roles",

@@ -15,9 +15,11 @@ public class AppUtils {
     public static DtoUser convertToDto(User user) {
         DtoUser savedUser = new DtoUser();
         savedUser.setEmail(user.getEmail());
-        savedUser.setFirstName(user.getFirst_name());
-        savedUser.setLastName(user.getLast_name());
+        savedUser.setFirstName(user.getFirstName());
+        savedUser.setLastName(user.getLastName());
         savedUser.setRoles(user.getRoles());
+        savedUser.setEnabled(user.isEnabled());
+        savedUser.setEnabled(user.isDeleted());
         return savedUser;
     }
 }
