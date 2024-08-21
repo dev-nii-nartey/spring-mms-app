@@ -35,6 +35,7 @@ build/
 
 #Custom ignores
 appliication-dev*
+application-test*
 
 .env
 target

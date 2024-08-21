@@ -3,8 +3,8 @@ package com.sanjeev.services;
 import com.sanjeev.dto.DtoUser;
 import com.sanjeev.exceptions.UserAlreadyExistsException;
 import com.sanjeev.exceptions.UserNotFoundException;
-import com.sanjeev.models.AppUser;
 import com.sanjeev.models.Role;
+import com.sanjeev.models.User;
 import com.sanjeev.repositories.RoleRepository;
 import com.sanjeev.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,12 +43,12 @@ class AppUserServiceImplTest {
         userRole.setName("USER");
         roleRepository.save(userRole);
 
-        AppUser user1 = new AppUser("password1", "user1@example.com", "John", "Doe");
-        user1.setRole(new HashSet<>(Set.of(adminRole)));
+        User user1 = new User("password1", "user1@example.com", "John", "Doe");
+        user1.setRoles(new HashSet<>(Set.of(adminRole)));
         userRepository.save(user1);
 
-        AppUser user2 = new AppUser("password2", "user2@example.com", "Jane", "Smith");
-        user2.setRole(new HashSet<>(Set.of(userRole)));
+        User user2 = new User("password2", "user2@example.com", "Jane", "Smith");
+        user2.setRoles(new HashSet<>(Set.of(userRole)));
         userRepository.save(user2);
     }
 
@@ -81,17 +81,17 @@ class AppUserServiceImplTest {
 
     @Test
     void addRoleToUser_ShouldAddRole_WhenRoleExists() {
-        AppUser user = userRepository.findByEmail("user2@example.com").orElseThrow();
+        User user = userRepository.findByEmail("user2@example.com").orElseThrow();
 
         appUserService.addRoleToUser(user, "ADMIN");
 
-        AppUser updatedUser = userRepository.findByEmail("user2@example.com").orElseThrow();
-        assertTrue(updatedUser.getRole().stream().anyMatch(role -> "ADMIN".equals(role.getName())));
+        User updatedUser = userRepository.findByEmail("user2@example.com").orElseThrow();
+        assertTrue(updatedUser.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getName())));
     }
 
     @Test
     void addRoleToUser_ShouldThrowException_WhenRoleDoesNotExist() {
-        AppUser user = userRepository.findByEmail("user2@example.com").orElseThrow();
+        User user = userRepository.findByEmail("user2@example.com").orElseThrow();
 
         assertThrows(RuntimeException.class, () -> appUserService.addRoleToUser(user, "NON_EXISTENT_ROLE"));
     }
@@ -126,7 +126,7 @@ class AppUserServiceImplTest {
 
         boolean result = appUserService.delete(id);
 
-        AppUser deletedUser = userRepository.findById(id).orElseThrow();
+        User deletedUser = userRepository.findById(id).orElseThrow();
         assertTrue(result);
         assertTrue(deletedUser.isDeleted());
     }

@@ -4,23 +4,25 @@ import com.sanjeev.dto.DtoUser;
 import com.sanjeev.exceptions.UserAlreadyExistsException;
 import com.sanjeev.exceptions.UserNotFoundException;
 import com.sanjeev.iservices.AppUserService;
-import com.sanjeev.models.AppUser;
 import com.sanjeev.models.Role;
+import com.sanjeev.models.User;
 import com.sanjeev.repositories.RoleRepository;
 import com.sanjeev.repositories.UserRepository;
 import com.sanjeev.utils.AppUtils;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Service
-@NoArgsConstructor
 public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     RoleRepository roleRepository;
@@ -40,12 +42,12 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new UserAlreadyExistsException("User with this email already exists");
         }
-        AppUser newUser = new AppUser(password, email, firstName, lastName);
-        AppUser saved = userRepository.save(newUser);
+        User newUser = new User(password, email, firstName, lastName);
+        User saved = userRepository.save(newUser);
         return AppUtils.convertToDto(saved);
     }
 
-    public void addRoleToUser(AppUser user, String roleName) {
+    public void addRoleToUser(User user, String roleName) {
         Role role = roleRepository.findRoleByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         user.addRole(role);
@@ -55,21 +57,21 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public DtoUser update(Long id, DtoUser userObject) {
-            AppUser existingUser = userRepository.findById(id)
+            User existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-            existingUser.setFirst_name(userObject.getFirstName());
-            existingUser.setLast_name(userObject.getLastName());
+            existingUser.setFirstName(userObject.getFirstName());
+            existingUser.setLastName(userObject.getLastName());
             existingUser.setPassword(userObject.getPassword());
 
-            AppUser updatedUser = userRepository.save(existingUser);
+            User updatedUser = userRepository.save(existingUser);
             return AppUtils.convertToDto(updatedUser);
         }
 
 
     @Override
     public boolean delete(Long id) {
-        AppUser user = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         user.setDeleted(true);
         userRepository.save(user);
@@ -85,7 +87,7 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public List<DtoUser> searchUser(String query) {
-        List<AppUser> users = userRepository.searchByQuery(query); // Assuming this method is implemented
+        List<User> users = userRepository.searchByQuery(query); // Assuming this method is implemented
         return users.stream()
                 .map(AppUtils::convertToDto)
                 .collect(Collectors.toList());
@@ -93,7 +95,7 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public DtoUser findByEmail(String email) {
-        AppUser user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .filter(u -> !u.isDeleted())
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         return AppUtils.convertToDto(user);
@@ -101,6 +103,17 @@ public class UserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        User user = userRepository.findByEmail( username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
+
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+                .map((role) -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
+
+        return new org.springframework.security.core.userdetails.User(
+                username,
+                user.getPassword(),
+                authorities
+        );
     }
 }

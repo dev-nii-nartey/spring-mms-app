@@ -2,18 +2,19 @@ package com.sanjeev.controllers;
 
 
 import com.sanjeev.dto.DtoUser;
+import com.sanjeev.models.User;
 import com.sanjeev.services.UserServiceImpl;
 import com.sanjeev.utils.AppUtils;
 import jakarta.validation.Valid;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/  ")
 public class UserController {
 
     private final UserServiceImpl appUserService;
@@ -22,12 +23,11 @@ public class UserController {
         this.appUserService = appUserService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<Object> signup( @Valid @RequestBody DtoUser body){
-
-//        appUserService.create(body);
-        return AppUtils.createResponse(body
-                , HttpStatus.CREATED);
+    @PostMapping("/user")
+    public ResponseEntity<?> signup( @RequestParam String name){
+        List<DtoUser> found = appUserService.searchUser(name);
+        return AppUtils.createResponse(found
+                , HttpStatus.OK);
 
     };
 

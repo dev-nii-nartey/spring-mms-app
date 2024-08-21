@@ -13,13 +13,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class AppUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(lombok.AccessLevel.NONE)
     private Long id;
 
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     private boolean isDeleted = false;
 
@@ -31,17 +31,20 @@ public class AppUser {
     private String email;
 
     @NonNull
-    private String first_name;
+    private String firstName;
 
     @NonNull
-    private String last_name;
+    private String lastName;
 
     @ManyToMany
-    @JoinTable(name="user_roles", joinColumns=@JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> role = new HashSet<>();
+    @JoinTable(name="user_roles",
+            joinColumns=@JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id",
+                    referencedColumnName = "id"))
+    private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role){
-        this.role.add(role);
+        this.roles.add(role);
     }
 
 }
