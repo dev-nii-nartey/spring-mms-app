@@ -44,11 +44,11 @@ class AppUserServiceImplTest {
         roleRepository.save(userRole);
 
         User user1 = new User("password1", "user1@example.com", "John", "Doe");
-        user1.setRole(new HashSet<>(Set.of(adminRole)));
+        user1.setRoles(new HashSet<>(Set.of(adminRole)));
         userRepository.save(user1);
 
         User user2 = new User("password2", "user2@example.com", "Jane", "Smith");
-        user2.setRole(new HashSet<>(Set.of(userRole)));
+        user2.setRoles(new HashSet<>(Set.of(userRole)));
         userRepository.save(user2);
     }
 
@@ -86,7 +86,7 @@ class AppUserServiceImplTest {
         appUserService.addRoleToUser(user, "ADMIN");
 
         User updatedUser = userRepository.findByEmail("user2@example.com").orElseThrow();
-        assertTrue(updatedUser.getRole().stream().anyMatch(role -> "ADMIN".equals(role.getName())));
+        assertTrue(updatedUser.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getName())));
     }
 
     @Test

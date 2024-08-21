@@ -9,6 +9,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,6 +35,9 @@ public class SpringSecurityConfig {
 
     private JwtAuthenticationFilter authenticationFilter;
 
+    private RateLimitFilter rateLimitFilter;
+
+
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -44,7 +48,7 @@ public class SpringSecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN");
+                   authorize.requestMatchers("/api/user").hasRole("ADMIN");
 //                    authorize.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN");
 //                    authorize.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN");
 //                    authorize.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "USER");
@@ -54,12 +58,12 @@ public class SpringSecurityConfig {
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
         http.exceptionHandling( exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint));
-
+                .authenticationEntryPoint(authenticationEntryPoint))     .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http.addFilterBefore(rateLimitFilter, JwtAuthenticationFilter.class);
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }

@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +21,8 @@ import java.io.IOException;
 // Execute Before Executing Spring Security Filters
 // Validate the JWT Token and Provides user details to Spring Security for Authentication
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE + 10)
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private JwtTokenProvider jwtTokenProvider;

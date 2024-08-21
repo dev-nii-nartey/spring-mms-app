@@ -30,7 +30,7 @@ class UserRepositoryTest {
         User savedUser = userRepository.save(newUser);
         assertEquals(email, savedUser.getEmail());
         assertNotNull(savedUser.getId());
-        assertFalse(savedUser.getRole().isEmpty());
+        assertFalse(savedUser.getRoles().isEmpty());
     }
 
     @Test

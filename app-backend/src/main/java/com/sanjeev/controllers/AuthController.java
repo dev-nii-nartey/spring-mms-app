@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 
 @AllArgsConstructor
 @RestController
@@ -24,16 +25,21 @@ public class AuthController {
 
 //Build Register REST API
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup( @Valid @RequestBody DtoUser body){
+    public ResponseEntity<?> signup( @Valid @RequestBody DtoUser body){
         DtoUser newUser = authService.register(body);
         return AppUtils.createResponse(newUser
                 , HttpStatus.CREATED);
 
+
     };
+
+    public String sanitizeOutput(String input) {
+        return HtmlUtils.htmlEscape(input);
+    }
 
     // Build Login REST API
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JwtAuthResponse> login(@Valid @RequestBody LoginDto loginDto){
         String token = authService.login(loginDto);
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setAccessToken(token);
